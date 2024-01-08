@@ -21,7 +21,7 @@ exports.signup = async (req, res) => {
 
     const addedUser = user.save();
     const verificationToken = user.generateVerificationToken();
-    const confirmationUrl = `https://mlindustrie-front.vercel.app/confirm/${verificationToken}`;
+    const confirmationUrl = `https://mlindustrie.fr/confirm/${verificationToken}`;
     console.log(`Generated confirmation URL: ${confirmationUrl}`); // Logging the URL
 
     if (addedUser) {
