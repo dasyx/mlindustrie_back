@@ -33,7 +33,7 @@ app.use(
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: "http://localhost:3000/",
+      domain: "https://mlindustrie-297b243678fc.herokuapp.com/",
       maxAge: 60 * 60 * 1000, // 1 heure de validité
     },
   })
