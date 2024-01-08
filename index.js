@@ -3,7 +3,6 @@ const express = require("express");
 const morgan = require("morgan");
 // Importation du package helmet pour sécuriser la requête http
 const helmet = require("helmet");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 // Importation du package qui protège contre les injections SQL
 const mongoSanitize = require("express-mongo-sanitize");
@@ -17,14 +16,15 @@ const app = express();
 // Utilisation de variable d'environnement pour dissimuler les infos de connexion
 require("dotenv").config();
 
-app.use(morgan("dev"));
+//app.use(morgan("dev"));
 
-var corsOptions = {
-  origin: "https://mlindustrie.fr",
-  optionsSuccessStatus: 200,
-};
+const cors = require("cors");
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "https://mlindustrie-front.vercel.app",
+  })
+);
 
 // Sécurisation des en-têtes HTTP
 app.use((req, res, next) => {
@@ -57,7 +57,7 @@ app.set("view engine", "handlebars");
 // On limitera le payload qu'un utilisateur pourra soumettre à l'API
 app.use(express.json({ limit: "5kb" }));
 
-app.use(helmet());
+//app.use(helmet());
 
 // Sanitization des données contre les attaques injections SQL
 app.use(mongoSanitize());
