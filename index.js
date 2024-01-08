@@ -21,9 +21,8 @@ app.use(morgan("dev"));
 
 app.use(
   cors({
-    origin: "https://main--mlindustrie.netlify.app",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // if your frontend is sending credentials like cookies, set this to true
+    origin: "https://mlindustrie.fr",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // if your frontend is sending credentials like cookies, set this to true
   })
 );
 
@@ -31,7 +30,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; img-src 'self' https://main--mlindustrie.netlify.app;"
+    "default-src 'self'; img-src 'self' https://mlindustrie.fr;"
   );
   next();
 });
