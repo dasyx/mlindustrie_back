@@ -10,6 +10,7 @@ const sendWelcomeEmail = async (email, name, confirmationUrl) => {
   const message = {
     to: email,
     from: process.env.SENDGRID_VERIFIED_SENDER, // Use the verified sender in your SendGrid account
+    subject: "Bienvenue chez ML Industrie",
     templateId: "d-72fab4d3a3784440bff03e39f2cd73ee", // Add your SendGrid Template ID here
     dynamic_template_data: {
       // These fields should correspond to the placeholders in your template
