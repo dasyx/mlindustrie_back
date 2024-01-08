@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 // Importation du package qui protège contre les injections SQL
 const mongoSanitize = require("express-mongo-sanitize");
 // Importation du package gérant la connexion par cookie
-const cookieSession = require("cookie-session");
+//const cookieSession = require("cookie-session");
 // Importation qui donne accès au système de fichiers
 const path = require("path");
 
@@ -26,7 +26,7 @@ app.use(
 app.use(bodyParser.json());
 
 // Sécurisation de la session et paramètrage du cookie de la session
-app.use(
+/* app.use(
   cookieSession({
     name: "session",
     secret: process.env.COOKIE_SESS,
@@ -37,7 +37,7 @@ app.use(
       maxAge: 60 * 60 * 1000, // 1 heure de validité
     },
   })
-);
+); */
 
 app.set("view engine", "handlebars");
 
