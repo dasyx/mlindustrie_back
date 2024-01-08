@@ -30,7 +30,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; img-src 'self' https://mlindustrie.fr;"
+    "default-src 'self'; img-src 'self' https://mlindustrie-front.vercel.app;"
   );
   next();
 });
