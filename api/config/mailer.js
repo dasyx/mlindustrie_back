@@ -11,7 +11,7 @@ let transporter = nodemailer.createTransport({
     pass: process.env.OUTLOOK_PASSWORD,
   },
   tls: {
-    rejectUnauthorized: true, // Change to true in production for better security
+    rejectUnauthorized: false, // Change to true in production for better security
   },
 });
 
