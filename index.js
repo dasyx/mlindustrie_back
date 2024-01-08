@@ -74,4 +74,4 @@ app.listen(port, () => {
 require("./api/config/db")(app);
 
 // Récupération des informations relatives aux routes du crud
-require("../api/routeHandler")(app);
+require("./api/routeHandler")(app);
