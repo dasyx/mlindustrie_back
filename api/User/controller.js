@@ -27,7 +27,8 @@ exports.signup = async (req, res) => {
     if (addedUser) {
       await sendWelcomeEmail(user.email, user.name, confirmationUrl);
       res.status(201).json({
-        message: "Please check your email to confirm your registration.",
+        message:
+          "Veuillez vérifier votre boîte mail pour confirmer votre inscription. Il se peut que le mail soit dans vos spams",
         data: addedUser,
       });
     } else {
