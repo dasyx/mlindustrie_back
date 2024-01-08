@@ -3,13 +3,16 @@ const hbs = require("nodemailer-express-handlebars");
 
 // Configuring nodemailer transporter
 let transporter = nodemailer.createTransport({
-  service: "hotmail",
+  host: "smtp-mail.outlook.com",
+  port: 587,
+  service: "outlook",
+  tls: {
+    ciphers: "SSLv3",
+    rejectUnauthorized: false,
+  },
   auth: {
     user: process.env.OUTLOOK_EMAIL,
     pass: process.env.OUTLOOK_PASSWORD,
-  },
-  tls: {
-    rejectUnauthorized: false, // Change to true in production for better security
   },
 });
 
