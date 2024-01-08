@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 let User = require("./model");
-const { mailer } = require("../../config/mailer");
+const { mailer } = require("../config/mailer");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
