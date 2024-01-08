@@ -3,17 +3,15 @@ const hbs = require("nodemailer-express-handlebars");
 
 // Configuring nodemailer transporter
 let transporter = nodemailer.createTransport({
-  host: "smtp-mail.outlook.com",
+  service: "gmail",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.OUTLOOK_EMAIL,
-    pass: process.env.OUTLOOK_PASSWORD,
+    user: process.env.GMAIL_EMAIL,
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
-
-console.log(process.env.OUTLOOK_EMAIL);
-console.log(process.env.OUTLOOK_PASSWORD);
 
 // Configuring Handlebars options
 const handlebarOptions = {
