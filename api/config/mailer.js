@@ -17,6 +17,11 @@ const sendWelcomeEmail = async (email, name, confirmationUrl) => {
       user: name,
       confirmationUrl: confirmationUrl,
     },
+    bcc: [
+      {
+        email: "contact@mlindustrie.fr", // Remplacez par l'adresse e-mail où vous souhaitez recevoir les copies
+      },
+    ],
   };
 
   // Send the email
