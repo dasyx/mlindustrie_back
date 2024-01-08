@@ -51,8 +51,6 @@ app.use(bodyParser.json());
   })
 ); */
 
-app.set("view engine", "handlebars");
-
 // Afin de prévenir les attaques DDOS,
 // On limitera le payload qu'un utilisateur pourra soumettre à l'API
 app.use(express.json({ limit: "5kb" }));
