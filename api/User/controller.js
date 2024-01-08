@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 let User = require("./model");
-let mailer = require("../config/mailer");
+const { mailer } = require("../../config/mailer");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
@@ -25,7 +25,7 @@ exports.signup = async (req, res) => {
     console.log(`Generated confirmation URL: ${confirmationUrl}`); // Logging the URL
 
     if (addedUser) {
-      mailer.welcomeMail(user.email, user.name, confirmationUrl);
+      mailer.sendWelcomeEmail(user.email, user.name, confirmationUrl);
       res.status(201).json({
         message: "Please check your email to confirm your registration.",
         data: addedUser,

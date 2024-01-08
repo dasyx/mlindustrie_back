@@ -1,45 +1,30 @@
-const nodemailer = require("nodemailer");
-const hbs = require("nodemailer-express-handlebars");
+require("dotenv").config();
+const sgMail = require("@sendgrid/mail");
 
-// Configuring nodemailer transporter
-let transporter = nodemailer.createTransport({
-  service: "hostinger",
-  host: "smtp.hostinger.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
-  },
-});
+// Configure SendGrid API Key
+sgMail.setApiKey(process.env.API_KEY);
 
-// Configuring Handlebars options
-const handlebarOptions = {
-  viewEngine: {
-    extName: ".handlebars",
-    partialsDir: "./views/partials",
-    layoutsDir: "./views/layouts",
-    defaultLayout: "",
-  },
-  viewPath: "./views/templates",
-  extName: ".handlebars",
+// Créer un e-mail
+const sendWelcomeEmail = async (email, name, confirmationUrl) => {
+  // Prepare the email data
+  const message = {
+    to: email,
+    from: process.env.SENDGRID_VERIFIED_SENDER, // Use the verified sender in your SendGrid account
+    subject: "Création de compte MLindustrie",
+    html: `<p>Bienvenue, ${name}! Veuillez confirmer votre email en cliquant sur le lien: ${confirmationUrl}</p>`, // Update this with your HTML template
+  };
+
+  // Send the email
+  try {
+    await sgMail.send(message);
+    console.log("Email sent successfully");
+  } catch (error) {
+    console.error("Error sending email", error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
+  }
 };
 
-// Applying Handlebars options to transporter
-transporter.use("compile", hbs(handlebarOptions));
-
-// Function to send welcome email
-exports.welcomeMail = (email, name, confirmationUrl) => {
-  console.log(`Sending confirmation URL: ${confirmationUrl}`); // Logging the URL
-  // Sending email using nodemailer
-  return transporter.sendMail({
-    from: process.env.OUTLOOK_EMAIL, // Using environment variable for sender email
-    to: email, // User's email
-    subject: "Création de compte MLindustrie", // Email subject
-    template: "bienvenue", // Handlebars template name
-    context: {
-      user: name, // Passing user name to the template
-      confirmationUrl: confirmationUrl, // Passing confirmation URL to the template
-    },
-  });
-};
+// Export the function to use it in other parts of your app
+module.exports = { sendWelcomeEmail };
