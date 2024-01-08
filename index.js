@@ -19,17 +19,12 @@ require("dotenv").config();
 
 app.use(morgan("dev"));
 
-app.use(
-  cors({
-    origin: "https://mlindustrie.fr",
-    setHeader: {
-      "Access-Control-Allow-Origin": "https://mlindustrie.fr",
-      "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Origin, X-Requested-With, Content-Type, Accept",
-    },
-  })
-);
+var corsOptions = {
+  origin: "https://mlindustrie.fr",
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Sécurisation des en-têtes HTTP
 app.use((req, res, next) => {
