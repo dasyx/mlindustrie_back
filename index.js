@@ -18,7 +18,11 @@ const app = express();
 require("dotenv").config();
 
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://mlindustrie.fr",
+  })
+);
 app.use(bodyParser.json());
 
 // Sécurisation de la session et paramètrage du cookie de la session
