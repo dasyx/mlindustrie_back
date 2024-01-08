@@ -22,6 +22,8 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: "https://main--mlindustrie.netlify.app",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // if your frontend is sending credentials like cookies, set this to true
   })
 );
 
