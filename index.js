@@ -22,7 +22,12 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: "https://mlindustrie.fr",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // if your frontend is sending credentials like cookies, set this to true
+    setHeader: {
+      "Access-Control-Allow-Origin": "https://mlindustrie.fr",
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers":
+        "Origin, X-Requested-With, Content-Type, Accept",
+    },
   })
 );
 
