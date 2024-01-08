@@ -18,9 +18,26 @@ const app = express();
 require("dotenv").config();
 
 app.use(morgan("dev"));
+
+// Liste des domaines autorisés
+const allowedOrigins = [
+  "https://mlindustrie.fr",
+  "https://main--mlindustrie.netlify.app",
+];
+
 app.use(
   cors({
-    //origin: "https://mlindustrie.fr",
+    origin: function (origin, callback) {
+      // Permettre aux requêtes sans 'origin' (comme les requêtes locales) de continuer
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " +
+          "allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
   })
 );
 app.use(bodyParser.json());
