@@ -7,8 +7,8 @@ let transporter = nodemailer.createTransport({
   host: "smtp-mail.outlook.com",
   port: 587,
   auth: {
-    user: process.env.OUTLOOK_EMAIL,
-    pass: process.env.OUTLOOK_PASSWORD,
+    user: "dasyx66@hotmail.fr",
+    pass: "alexandra6",
   },
   tls: {
     rejectUnauthorized: false, // Change to true in production for better security
