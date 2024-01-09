@@ -18,5 +18,6 @@ router.post("/signup", userController.signup);
 router.get("/confirm/:token", userController.confirm);
 router.post("/login", userController.login);
 router.get("/:id", userController.getOneUser);
+router.delete("/:id", userController.deleteUser);
 
 module.exports = router;
