@@ -73,7 +73,10 @@ exports.login = async (req, res) => {
       message: "Utilisateur connecté.",
       token,
       id: user._id,
-      name: user.name, // Inclure le nom de l'utilisateur dans la réponse
+      user: {
+        id: user._id,
+        name: user.name, // Placer les données utilisateur dans une clé `user`
+      },
     });
   } catch (err) {
     console.error(err);
@@ -110,7 +113,7 @@ exports.getOneUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Utilisateur récupéré avec succès",
-      data: user,
+      user,
     });
   } catch (err) {
     console.error(err);
