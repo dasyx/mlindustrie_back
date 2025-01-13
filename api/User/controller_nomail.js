@@ -73,10 +73,6 @@ exports.login = async (req, res) => {
       message: "Utilisateur connecté.",
       token,
       id: user._id,
-      user: {
-        id: user._id,
-        name: user.name, // Placer les données utilisateur dans une clé `user`
-      },
     });
   } catch (err) {
     console.error(err);
@@ -87,40 +83,19 @@ exports.login = async (req, res) => {
   }
 };
 
-// USER DISPLAY
+// USER DISPLAY  //
 exports.getOneUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-
-    // Vérifier si l'ID est valide
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: "ID utilisateur invalide",
-      });
+    const userId = req.params.id; // L'ID de l'utilisateur est généralement passé dans l'URL
+    const user = await User.findById(userId).select("-password"); // Exclure le mot de passe des données retournées
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
     }
-
-    // Rechercher l'utilisateur
-    const user = await User.findById(userId).select("-password");
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Utilisateur non trouvé",
-      });
-    }
-
-    // Renvoyer les informations utilisateur
-    res.status(200).json({
-      success: true,
-      message: "Utilisateur récupéré avec succès",
-      user,
-    });
   } catch (err) {
-    console.error(err);
     res.status(500).json({
-      success: false,
-      message: "Erreur interne du serveur",
-      error: err.message,
+      error: err,
     });
   }
 };
