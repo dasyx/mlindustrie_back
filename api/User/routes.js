@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const userController = require("./controller");
+const userControllerNoMail = require(".controller_nomail");
 
 //Utilisation du package npm permettant de bloquer les abus lors de tentatives de connexions
 const rateLimit = require("express-rate-limit");
@@ -13,11 +14,18 @@ const limitation = rateLimit({
     "Nombre de requêtes abusives détectées , attendez 5 minutes avant nouvel essai",
 });
 
-// Gestion des différentes routes (accès) utilisateurs
+/* // Gestion des différentes routes (accès) utilisateurs
 router.post("/signup", userController.signup);
 router.get("/confirm/:token", userController.confirm);
 router.post("/login", userController.login);
 router.get("/:id", userController.getOneUser);
-router.delete("/:id", userController.deleteUser);
+router.delete("/:id", userController.deleteUser); */
+
+// Gestion des différentes routes (accès) utilisateurs
+router.post("/signup", userControllerNoMail.signup);
+router.get("/confirm/:token", userControllerNoMail.confirm);
+router.post("/login", userControllerNoMail.login);
+router.get("/:id", userControllerNoMail.getOneUser);
+router.delete("/:id", userControllerNoMail.deleteUser);
 
 module.exports = router;
