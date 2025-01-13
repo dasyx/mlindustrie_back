@@ -1,15 +1,17 @@
 const bcrypt = require("bcrypt");
 let User = require("./model");
-//const { sendWelcomeEmail } = require("../config/mailer");
+const { sendWelcomeEmail } = require("../config/mailer");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+
+// USER REGISTRATION
 
 // User registration
 exports.signup = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = new User({
+    const user = await new User({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       email: req.body.email,
@@ -19,24 +21,11 @@ exports.signup = async (req, res) => {
     const addedUser = await user.save();
 
     if (addedUser) {
-      // Génération d'un token JWT
-      const token = jwt.sign(
-        { userId: addedUser._id },
-        process.env.SESSION_TOKEN,
-        {
-          expiresIn: "24h",
-        }
-      );
-
-      // Réponse avec l'utilisateur et le token
+      // Optionnel : Envoyer un email de bienvenue
+      await sendWelcomeEmail(user.email, user.name);
       res.status(201).json({
         message: "Inscription réussie.",
-        user: {
-          id: addedUser._id,
-          name: addedUser.name,
-          email: addedUser.email,
-        },
-        token,
+        data: addedUser,
       });
     } else {
       res
@@ -51,17 +40,13 @@ exports.signup = async (req, res) => {
 
 // User login
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
-  // Vérification des champs requis
-  if (!email || !password) {
+  const { email } = req.body;
+  if (!email) {
     return res.status(422).send({
-      message: "Email ou mot de passe manquant.",
+      message: "Email manquant.",
     });
   }
-
   try {
-    // Rechercher l'utilisateur par email
     const user = await User.findOne({ email }).exec();
     if (!user) {
       return res.status(404).send({
@@ -70,38 +55,34 @@ exports.login = async (req, res) => {
     }
 
     // Vérification du mot de passe
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
       return res.status(401).send({
         message: "Mot de passe incorrect.",
       });
     }
 
-    // Générer un token JWT
+    // Générer un token
     const token = jwt.sign({ userId: user._id }, process.env.SESSION_TOKEN, {
       expiresIn: "24h",
     });
 
-    // Envoyer la réponse avec le nom et l'ID de l'utilisateur
+    console.log(token);
     return res.status(200).send({
-      message: "Utilisateur connecté.",
+      message: "Utilisateur connecté",
       token,
       id: user._id,
     });
   } catch (err) {
-    console.error(err);
-    return res.status(500).send({
-      message: "Erreur interne du serveur.",
-      error: err.message,
-    });
+    return res.status(500).send(err);
   }
 };
 
-// USER DISPLAY  //
+// USER DISPLAY
 exports.getOneUser = async (req, res) => {
   try {
-    const userId = req.params.id; // L'ID de l'utilisateur est généralement passé dans l'URL
-    const user = await User.findById(userId).select("-password"); // Exclure le mot de passe des données retournées
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password");
     if (user) {
       res.status(200).json(user);
     } else {
