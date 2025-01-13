@@ -23,7 +23,6 @@ router.delete("/:id", userController.deleteUser); */
 
 // Gestion des différentes routes (accès) utilisateurs
 router.post("/signup", userControllerNoMail.signup);
-router.get("/confirm/:token", userControllerNoMail.confirm);
 router.post("/login", userControllerNoMail.login);
 router.get("/:id", userControllerNoMail.getOneUser);
 router.delete("/:id", userControllerNoMail.deleteUser);
