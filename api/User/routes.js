@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const userController = require("./controller");
-const userControllerNoMail = require(".controller_nomail");
+//const userController = require("./controller");
+const userControllerNoMail = require("./controller_nomail");
 
 //Utilisation du package npm permettant de bloquer les abus lors de tentatives de connexions
 const rateLimit = require("express-rate-limit");
