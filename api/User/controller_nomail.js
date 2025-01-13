@@ -19,10 +19,24 @@ exports.signup = async (req, res) => {
     const addedUser = await user.save();
 
     if (addedUser) {
-      // Réponse en cas de succès sans envoyer d'email
+      // Génération d'un token JWT
+      const token = jwt.sign(
+        { userId: addedUser._id },
+        process.env.SESSION_TOKEN,
+        {
+          expiresIn: "24h",
+        }
+      );
+
+      // Réponse avec l'utilisateur et le token
       res.status(201).json({
         message: "Inscription réussie.",
-        data: addedUser,
+        user: {
+          id: addedUser._id,
+          name: addedUser.name,
+          email: addedUser.email,
+        },
+        token,
       });
     } else {
       res
