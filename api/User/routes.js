@@ -21,7 +21,7 @@ router.post("/login", userController.login);
 router.get("/:id", userController.getOneUser);
 router.delete("/:id", userController.deleteUser); */
 
-// Gestion des différentes routes (accès) utilisateurs
+// Gestion des différentes routes (accès) utilisateurs sans vérification mail
 router.post("/signup", userControllerNoMail.signup);
 router.post("/login", userControllerNoMail.login);
 router.get("/:id", userControllerNoMail.getOneUser);
