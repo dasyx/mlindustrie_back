@@ -1,17 +1,15 @@
 const bcrypt = require("bcrypt");
 let User = require("./model");
-const { sendWelcomeEmail } = require("../config/mailer");
+//const { sendWelcomeEmail } = require("../config/mailer");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-
-// USER REGISTRATION
 
 // User registration
 exports.signup = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = await new User({
+    const user = new User({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       email: req.body.email,
@@ -21,8 +19,7 @@ exports.signup = async (req, res) => {
     const addedUser = await user.save();
 
     if (addedUser) {
-      // Optionnel : Envoyer un email de bienvenue
-      await sendWelcomeEmail(user.email, user.name);
+      // Réponse en cas de succès sans envoyer d'email
       res.status(201).json({
         message: "Inscription réussie.",
         data: addedUser,
@@ -40,13 +37,17 @@ exports.signup = async (req, res) => {
 
 // User login
 exports.login = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
+  const { email, password } = req.body;
+
+  // Vérification des champs requis
+  if (!email || !password) {
     return res.status(422).send({
-      message: "Email manquant.",
+      message: "Email ou mot de passe manquant.",
     });
   }
+
   try {
+    // Rechercher l'utilisateur par email
     const user = await User.findOne({ email }).exec();
     if (!user) {
       return res.status(404).send({
@@ -55,26 +56,31 @@ exports.login = async (req, res) => {
     }
 
     // Vérification du mot de passe
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).send({
         message: "Mot de passe incorrect.",
       });
     }
 
-    // Générer un token
+    // Générer un token JWT
     const token = jwt.sign({ userId: user._id }, process.env.SESSION_TOKEN, {
       expiresIn: "24h",
     });
 
-    console.log(token);
+    // Envoyer la réponse avec le nom et l'ID de l'utilisateur
     return res.status(200).send({
-      message: "Utilisateur connecté",
+      message: "Utilisateur connecté.",
       token,
       id: user._id,
+      name: user.name, // Inclure le nom de l'utilisateur dans la réponse
     });
   } catch (err) {
-    return res.status(500).send(err);
+    console.error(err);
+    return res.status(500).send({
+      message: "Erreur interne du serveur.",
+      error: err.message,
+    });
   }
 };
 
@@ -82,15 +88,36 @@ exports.login = async (req, res) => {
 exports.getOneUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById(userId).select("-password");
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: "Utilisateur non trouvé" });
+
+    // Vérifier si l'ID est valide
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "ID utilisateur invalide",
+      });
     }
+
+    // Rechercher l'utilisateur
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    // Renvoyer les informations utilisateur
+    res.status(200).json({
+      success: true,
+      message: "Utilisateur récupéré avec succès",
+      data: user,
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({
-      error: err,
+      success: false,
+      message: "Erreur interne du serveur",
+      error: err.message,
     });
   }
 };
